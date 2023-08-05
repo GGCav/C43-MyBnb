@@ -1,5 +1,4 @@
--- Active: 1690494586324@@127.0.0.1@3306@MyBnB
-/*write sql according to CSCC43 project MyBnB.docx*/
+-- Active: 1690494586324@@127.0.0.1@3306
 DROP DATABASE IF EXISTS MyBnB;
 CREATE DATABASE MyBnB DEFAULT CHARACTER SET = 'utf8mb4';
 USE MyBnB;
@@ -22,9 +21,9 @@ CREATE TABLE Users(
     username VARCHAR(255),
     password VARCHAR(255),
     phone VARCHAR(255),
-    latitude FLOAT,
-    longitude FLOAT,
-    Foreign Key (latitude, longitude) REFERENCES Addresses(latitude, longitude) ON DELETE CASCADE,
+    -- latitude FLOAT,
+    -- longitude FLOAT,
+    -- Foreign Key (latitude, longitude) REFERENCES Addresses(latitude, longitude) ON DELETE CASCADE,
     is_admin BOOLEAN
 ) COMMENT '';
 
@@ -39,13 +38,14 @@ DROP TABLE IF EXISTS Hosts;
 CREATE TABLE Hosts(
     uid int,
     Foreign Key (uid) REFERENCES Users(uid) ON DELETE CASCADE,
+    insurance_number VARCHAR(255)
 ) COMMENT '';
 
 DROP TABLE IF EXISTS Listings;
 CREATE TABLE Listings(
     lid int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
-    uid int,
-    Foreign Key (uid) REFERENCES Hosts(uid) ON DELETE CASCADE,
+    hid int,
+    Foreign Key (hid) REFERENCES Hosts(hid) ON DELETE CASCADE,
     type VARCHAR(255),
     latitude FLOAT,
     longitude FLOAT,
