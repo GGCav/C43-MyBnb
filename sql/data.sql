@@ -21,6 +21,9 @@ CREATE TABLE Users(
     username VARCHAR(255),
     password VARCHAR(255),
     phone VARCHAR(255),
+    date_of_birth DATE,
+    SIN VARCHAR(255),
+    occupation VARCHAR(255),
     -- latitude FLOAT,
     -- longitude FLOAT,
     -- Foreign Key (latitude, longitude) REFERENCES Addresses(latitude, longitude) ON DELETE CASCADE,
@@ -38,7 +41,7 @@ DROP TABLE IF EXISTS Hosts;
 CREATE TABLE Hosts(
     uid int,
     Foreign Key (uid) REFERENCES Users(uid) ON DELETE CASCADE,
-    insurance_number VARCHAR(255)
+    number_of_listings int
 ) COMMENT '';
 
 DROP TABLE IF EXISTS Listings;
