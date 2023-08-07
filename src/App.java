@@ -62,6 +62,7 @@ public class App {
                         //logout
                         System.out.println("Goodbye! "+loginPage.getUsername());
                         loginPage.logOut();
+                        break;
                     } else {
                         System.out.println("Invalid option!");
                         continue;
@@ -111,6 +112,7 @@ public class App {
                         //logout
                         System.out.println("Goodbye! "+loginPage.getUsername());
                         loginPage.logOut();
+                        break;
                     } else {
                         System.out.println("Invalid option!");
                         continue;

@@ -729,7 +729,7 @@ public class HostPage {
                         System.out.println("Date: " + rs4.getString("Date"+ "; Price: " + rs4.getString("price")));
                     }
                     //print comments for this listing
-                    sql = "SELECT * FROM Comments WHERE lid = \"" + rs.getInt("lid") + "\";";
+                    sql = "SELECT * FROM ListingComments WHERE lid = \"" + rs.getInt("lid") + "\";";
                     Statement stmt5 = conn.createStatement();
                     ResultSet rs5 = stmt5.executeQuery(sql);
                     System.out.println("Comments:");
@@ -754,15 +754,15 @@ public class HostPage {
                 System.out.println("0. Exit");
                 Scanner input = new Scanner(System.in);
                 option = input.nextLine();
-                if (option == "1"){
+                if (option.equals("1")){
                     updateListing(host_id);
-                }else if (option == "2"){
+                }else if (option.equals("2")){
                     updateAvailabilies(host_id);
-                }else if (option == "3"){
+                }else if (option.equals("3")){
                     cancelBookings(host_id);
-                }else if (option == "4"){
+                }else if (option.equals("4")){
                     deleteListing(host_id);  
-                }else if (option == "0"){
+                }else if (option.equals("0")){
                     break;
                 }else{
                     System.out.println("Invalid option!");
@@ -845,9 +845,9 @@ public class HostPage {
             System.out.println("First Name: " + rs.getString("first_name"));
             System.out.println("Last Name: " + rs.getString("last_name"));
             System.out.println("Date of birth: " + rs.getString("date_of_birth"));
-            System.out.println("SIN: " + rs.getString("sin"));
+            System.out.println("SIN: " + rs.getString("SIN"));
             System.out.println("Occupation: " + rs.getString("occupation"));
-            System.out.println("Phone Number: " + rs.getString("phone_number"));
+            System.out.println("Phone Number: " + rs.getString("phone"));
             System.out.println("Number of Listings: " + rs.getInt("number_of_listings"));
             sql = "SELECT * FROM Addresses WHERE latitude = \"" + rs.getString("latitude") + "\" AND longitude = \"" + rs.getString("longitude") + "\";";
             rs = stmt.executeQuery(sql);
@@ -855,6 +855,15 @@ public class HostPage {
             System.out.println("Address: " + rs.getString("postal_code") + ", " + rs.getString("city") + ", " + rs.getString("country"));
             System.out.println("Latitude: " + rs.getString("latitude"));
             System.out.println("Longitude: " + rs.getString("longitude"));
+            sql = "SELECT * FROM HostComments WHERE uid1 = \"" + host_id + "\";";
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                System.out.println("------------------------------------");
+                System.out.println("Renter ID: " + rs.getInt("uid2"));
+                System.out.println("Comment: " + rs.getString("content"));
+                System.out.println("Rating: " + rs.getInt("rating"));
+                System.out.println("------------------------------------");
+            }
             System.out.println("====================================");
             stmt.close();
             conn.close();
