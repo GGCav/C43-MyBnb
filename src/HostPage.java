@@ -966,7 +966,7 @@ public class HostPage {
                 sql = "INSERT INTO Addresses (latitude, longitude, postal_code, city, country) VALUES ('" + latitude + "','" + longitude + "', '" + postal_code + "', '" + city + "', '" + country + "');";
                 stmt.executeUpdate(sql);
             }
-            sql = "UPDATE Users SET first_name = '" + first_name + "', last_name = '" + last_name + "', date_of_birth = '" + date_of_birth + "', sin = '" + sin + "', occupation = '" + occupation + "', phone_number = '" + phone_number + "', latitude = '" + latitude + "', longitude = '" + longitude + "' WHERE uid = " + host_id + ";";
+            sql = "UPDATE Users SET first_name = '" + first_name + "', last_name = '" + last_name + "', date_of_birth = '" + date_of_birth + "', SIN = '" + sin + "', occupation = '" + occupation + "', phone_number = '" + phone_number + "', latitude = '" + latitude + "', longitude = '" + longitude + "' WHERE uid = " + host_id + ";";
             stmt.executeUpdate(sql);
             System.out.println("Account updated!");
             rs.close();
