@@ -838,10 +838,10 @@ public class HostPage {
             Statement stmt = conn.createStatement();
             String sql = "SELECT * FROM Hosts inner join Users on Hosts.uid = Users.uid WHERE Hosts.uid = \"" + host_id + "\";";
             ResultSet rs = stmt.executeQuery(sql);
-            rs.next()
+            rs.next();
             System.out.println("====================================");
             System.out.println("User ID: " + rs.getInt("uid"));
-            System.out.println("Username: " + rs.getString("username")
+            System.out.println("Username: " + rs.getString("username"));
             System.out.println("First Name: " + rs.getString("first_name"));
             System.out.println("Last Name: " + rs.getString("last_name"));
             System.out.println("Date of birth: " + rs.getString("date_of_birth"));
