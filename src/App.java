@@ -32,47 +32,35 @@ public class App {
                 while (!host_option.equals("10")) {
                     System.out.println("Please select an option:");
                     System.out.println("1 to post a listing");
-                    System.out.println("2 to update a listing");
-                    System.out.println("3 to delete a listing");
-                    System.out.println("4 to view your listings");
-                    System.out.println("5 to cancel booking");
-                    System.out.println("6 to comment");
-                    System.out.println("7 to view account info");
-                    System.out.println("8 to update account");
-                    System.out.println("9 to delete account");
-                    System.out.println("10 to logout");
+                    System.out.println("2 to view your listings");
+                    System.out.println("3 to comment");
+                    System.out.println("4 to view account info");
+                    System.out.println("5 to update account");
+                    System.out.println("6 to delete account");
+                    System.out.println("7 to logout");
                     host_option = input.nextLine();
                     HostPage hostPage = new HostPage();
                     if (host_option.equals("1")) {
                         //post a listing
-                        hostPage.postListing();
+                        hostPage.postListing(loginPage.getUser());
                     } else if (host_option.equals("2")) {
-                        //update a listing
-                        hostPage.updateListing();
-                    } else if (host_option.equals("3")) {
-                        //delete a listing
-                        hostPage.deleteListing();
-                    } else if (host_option.equals("4")) {
                         //view your listings
-                        hostPage.viewListings();
-                    } else if (host_option.equals("5")) {
-                        //cancel booking
-                        hostPage.cancelBooking();
-                    } else if (host_option.equals("6")) {
+                        hostPage.viewListings(loginPage.getUser());
+                    } else if (host_option.equals("3")) {
                         //comment
-                        hostPage.comment();
-                    } else if (host_option.equals("7")) {
+                        hostPage.comment(loginPage.getUser());
+                    } else if (host_option.equals("4")) {
                         //view account info
-                        hostPage.viewAccountInfo();
-                    } else if (host_option.equals("8")) {
+                        hostPage.viewAccountInfo(loginPage.getUser());
+                    } else if (host_option.equals("5")) {
                         //update account
-                        hostPage.updateAccount();
-                    } else if (host_option.equals("9")) {
+                        hostPage.updateAccount(loginPage.getUser());
+                    } else if (host_option.equals("6")) {
                         //delete account
-                        hostPage.deleteAccount();
-                    } else if (host_option.equals("10")) {
+                        hostPage.deleteAccount(loginPage.getUser());
+                    } else if (host_option.equals("7")) {
                         //logout
-                        System.out.println("Goodbye!"+loginPage.getUsername());
+                        System.out.println("Goodbye! "+loginPage.getUsername());
                         loginPage.logOut();
                     } else {
                         System.out.println("Invalid option!");
@@ -121,7 +109,7 @@ public class App {
                         renterPage.deleteAccount();
                     } else if (renter_option.equals("9")) {
                         //logout
-                        System.out.println("Goodbye!"+loginPage.getUsername());
+                        System.out.println("Goodbye! "+loginPage.getUsername());
                         loginPage.logOut();
                     } else {
                         System.out.println("Invalid option!");
@@ -166,7 +154,7 @@ public class App {
                         admin.viewWordCloud();
                     } else if (admin_option.equals("8")) {
                         //logout
-                        System.out.println("Goodbye!"+loginPage.getUsername());
+                        System.out.println("Goodbye! "+loginPage.getUsername());
                         loginPage.logOut();
                     } else {
                         System.out.println("Invalid option!");

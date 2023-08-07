@@ -141,8 +141,24 @@ public class LoginPage {
                 }
 
                 //Enter addresses
-                
-                queryString = "INSERT INTO Users (username, password, first_name, last_name, occupation, date_of_birth, phone, sin, is_admin) VALUES ('" + username + "', '" + password + "', '" + firstName + "', '" + lastName + "', '" + occupation + "', '" + dob + "', '" + phone + "', '" + sin + "','0')";
+                System.out.println("please enter the latitude of the listing:");
+                String latitude = input.nextLine();
+                System.out.println("please enter the longitude of the listing:");
+                String longitude = input.nextLine();
+                System.out.println("please enter the postal code of the listing:");
+                String postalcode = input.nextLine();
+                System.out.println("please enter the city of the listing:");
+                String city = input.nextLine();
+                System.out.println("please enter the country of the listing:");
+                String country = input.nextLine();
+                queryString = "SELECT * FROM Addresses WHERE latitude = " + latitude + " AND longitude = " + longitude;
+                rs = stmt.executeQuery(queryString);
+                if (!rs.next()) {
+                    queryString = "INSERT INTO Addresses (latitude, longitude, postal_code, city, country) VALUES ('" + latitude + "','" + longitude + "', '" + postalcode + "', '" + city + "', '" + country + "');";
+                    stmt.executeUpdate(queryString);
+                }
+                //put in table USERS
+                queryString = "INSERT INTO Users (username, password, first_name, last_name, occupation, date_of_birth, phone, sin, is_admin, latitude, longitude) VALUES ('" + username + "', '" + password + "', '" + firstName + "', '" + lastName + "', '" + occupation + "', '" + dob + "', '" + phone + "', '" + sin + "','0','" + latitude + "','" + longitude + "')";
                 stmt.executeUpdate(queryString);
                 //get uid for the new user
                 queryString = "SELECT * FROM Users where username = \"" + username+"\"";
@@ -203,7 +219,27 @@ public class LoginPage {
                     System.out.println("SIN already exists!");
                     return;
                 }
-                queryString = "INSERT INTO Users (username, password, first_name, last_name, occupation, date_of_birth, phone, sin, is_admin) VALUES ('" + username + "', '" + password + "', '" + firstName + "', '" + lastName + "', '" + occupation + "', '" + dob + "', '" + phone + "', '" + sin + "','0')";
+
+                //Enter addresses
+                System.out.println("please enter the latitude of the listing:");
+                String latitude = input.nextLine();
+                System.out.println("please enter the longitude of the listing:");
+                String longitude = input.nextLine();
+                System.out.println("please enter the postal code of the listing:");
+                String postalcode = input.nextLine();
+                System.out.println("please enter the city of the listing:");
+                String city = input.nextLine();
+                System.out.println("please enter the country of the listing:");
+                String country = input.nextLine();
+                queryString = "SELECT * FROM Addresses WHERE latitude = " + latitude + " AND longitude = " + longitude;
+                rs = stmt.executeQuery(queryString);
+                if (!rs.next()) {
+                    queryString = "INSERT INTO Addresses (latitude, longitude, postal_code, city, country) VALUES ('" + latitude + "','" + longitude + "', '" + postalcode + "', '" + city + "', '" + country + "');";
+                    stmt.executeUpdate(queryString);
+                }
+
+                //put in table USERS
+                queryString = "INSERT INTO Users (username, password, first_name, last_name, occupation, date_of_birth, phone, sin, is_admin, latitude, longitude) VALUES ('" + username + "', '" + password + "', '" + firstName + "', '" + lastName + "', '" + occupation + "', '" + dob + "', '" + phone + "', '" + sin + "','0','" + latitude + "','" + longitude + "')";
                 stmt.executeUpdate(queryString);
                 //get uid for the new user
                 queryString = "SELECT * FROM Users where username = \"" + username+"\"";
@@ -213,7 +249,7 @@ public class LoginPage {
                 //put in table HOSTS
                 System.out.println("Enter your credit card number: ");
                 String CardNumber = input.nextLine();
-                queryString = "INSERT INTO Hosts (uid,card_number) VALUES ('" + uid + "', '" + CardNumber + "')";
+                queryString = "INSERT INTO Renters (uid,card_number) VALUES ('" + uid + "', '" + CardNumber + "')";
                 stmt.executeUpdate(queryString);
                 System.out.println("Signed up successfully!");
                 stmt.close();
