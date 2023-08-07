@@ -47,12 +47,12 @@ CREATE TABLE Hosts(
 DROP TABLE IF EXISTS Listings;
 CREATE TABLE Listings(
     lid int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
-    hid int,
-    Foreign Key (hid) REFERENCES Hosts(hid) ON DELETE CASCADE,
+    uid int,
+    Foreign Key (uid) REFERENCES Hosts(uid) ON DELETE CASCADE,
     type VARCHAR(255),
     latitude FLOAT,
     longitude FLOAT,
-    Foreign Key (latitude, longitude) REFERENCES Addresses(latitude, longitude) ON DELETE CASCADE,
+    Foreign Key (latitude, longitude) REFERENCES Addresses(latitude, longitude) ON DELETE CASCADE
 ) COMMENT '';
 
 DROP TABLE IF EXISTS Amentity;
