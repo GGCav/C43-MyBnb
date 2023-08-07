@@ -212,6 +212,25 @@ public class HostPage {
                 stmt.executeUpdate(sql);
                 System.out.println("Amenity added!");
             }
+            //calculate the number of amenities and set a appropriate price
+            sql = "SELECT COUNT(*) FROM Amentity WHERE lid = " + lid + ";";
+            rs = stmt.executeQuery(sql);
+            rs.next();
+            int count = rs.getInt("COUNT(*)");
+            int price = 0;
+            if (count <= 5) {
+                price = 200;
+            } else if (count <= 10) {
+                price = 250;
+            } else if (count <= 15) {
+                price = 300;
+            } else if (count <= 20) {
+                price = 350;
+            } else {
+                price = 400;
+            }
+            sql = "UPDATE Listings SET suggested_price = " + price + " WHERE lid = " + lid + ";";
+            stmt.executeUpdate(sql);
             System.out.println("Listing posted!");
             //increment host's listing count
             sql = "UPDATE Hosts SET number_of_listings = number_of_listings + 1 WHERE uid = " + host_id + ";";
@@ -456,6 +475,25 @@ public class HostPage {
                 }
                 System.out.println("Amenity deleted!");
             }
+            //calculate the number of amenities and set a appropriate price
+            sql = "SELECT COUNT(*) FROM Amentity WHERE lid = " + lid + ";";
+            rs = stmt.executeQuery(sql);
+            rs.next();
+            int count = rs.getInt("COUNT(*)");
+            int price = 0;
+            if (count <= 5) {
+                price = 200;
+            } else if (count <= 10) {
+                price = 250;
+            } else if (count <= 15) {
+                price = 300;
+            } else if (count <= 20) {
+                price = 350;
+            } else {
+                price = 400;
+            }
+            sql = "UPDATE Listings SET suggested_price = " + price + " WHERE lid = " + lid + ";";
+            stmt.executeUpdate(sql);
             System.out.println("Listing updated!");
             rs.close();
             stmt.close();
@@ -701,6 +739,14 @@ public class HostPage {
                     System.out.println("Type: " + rs.getString("type"));
                     System.out.println("Latitude: " + rs.getString("latitude"));
                     System.out.println("Longitude: " + rs.getString("longitude"));
+                    sql = "SELECT * FROM Addresses WHERE latitude = \"" + rs.getString("latitude") + "\" AND longitude = \"" + rs.getString("longitude") + "\";";
+                    Statement stmt1 = conn.createStatement();
+                    ResultSet rs1 = stmt1.executeQuery(sql);
+                    rs1.next();
+                    System.out.println("Postal Code: " + rs1.getString("postal_code"));
+                    System.out.println("City: " + rs1.getString("city"));
+                    System.out.println("Country: " + rs1.getString("country"));
+                    System.out.println("Suggested price: " + rs.getString("suggested_price"));
                     System.out.println("Amenities:");
                     sql = "SELECT * FROM Amentity WHERE lid = \"" + rs.getInt("lid") + "\";";
                     Statement stmt2 = conn.createStatement();

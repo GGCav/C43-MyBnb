@@ -5,35 +5,35 @@ public class RenterPage {
     private static final String dbClassName = "com.mysql.cj.jdbc.Driver";
 	private static final String CONNECTION = "jdbc:mysql://127.0.0.1/MyBnB";
 
-    public void searchListings() {
+    public void searchListings(int renter_id) {
         // TODO implement here
     }
 
-    public void bookLising() {
+    public void bookLising(int renter_id) {
         // TODO implement here
     }
 
-    public void cancelBooking() {
+    public void cancelBooking(int renter_id) {
         // TODO implement here
     }
 
-    public void comment() {
+    public void comment(int renter_id) {
         // TODO implement here
     }
 
-    public void viewBookings() {
+    public void viewBookings(int renter_id) {
         // TODO implement here
     }
 
-    public void viewAccountInfo() {
+    public void viewAccountInfo(int renter_id) {
         // TODO implement here
     }
 
-    public void updateAccount() {
+    public void updateAccount(int renter_id) {
         // TODO implement here
     }
 
-    public void deleteAccount() {
+    public void deleteAccount(int renter_id) {
         // TODO implement here
     }
 }

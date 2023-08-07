@@ -58,6 +58,8 @@ public class App {
                     } else if (host_option.equals("6")) {
                         //delete account
                         hostPage.deleteAccount(loginPage.getUser());
+                        loginPage.logOut();
+                        break;
                     } else if (host_option.equals("7")) {
                         //logout
                         System.out.println("Goodbye! "+loginPage.getUsername());
@@ -86,28 +88,30 @@ public class App {
                     RenterPage renterPage = new RenterPage();
                     if (renter_option.equals("1")) {
                         //search listings
-                        renterPage.searchListings();
+                        renterPage.searchListings(loginPage.getUser());
                     } else if (renter_option.equals("2")) {
                         //book listings
-                        renterPage.bookLising();
+                        renterPage.bookLising(loginPage.getUser());
                     } else if (renter_option.equals("3")) {
                         //cancel a booking
-                        renterPage.cancelBooking();
+                        renterPage.cancelBooking(loginPage.getUser());
                     } else if (renter_option.equals("4")) {
                         //comment
-                        renterPage.comment();
+                        renterPage.comment(loginPage.getUser());
                     } else if (renter_option.equals("5")) {
                         //view past bookings
-                        renterPage.viewBookings();
+                        renterPage.viewBookings(loginPage.getUser());
                     } else if (renter_option.equals("6")) {
                         //view account info
-                        renterPage.viewAccountInfo();
+                        renterPage.viewAccountInfo(loginPage.getUser());
                     } else if (renter_option.equals("7")) {
                         //update account
-                        renterPage.updateAccount();
+                        renterPage.updateAccount(loginPage.getUser());
                     } else if (renter_option.equals("8")) {
                         //delete account
-                        renterPage.deleteAccount();
+                        renterPage.deleteAccount(loginPage.getUser());
+                        loginPage.logOut();
+                        break;
                     } else if (renter_option.equals("9")) {
                         //logout
                         System.out.println("Goodbye! "+loginPage.getUsername());

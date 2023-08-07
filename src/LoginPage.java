@@ -269,7 +269,6 @@ public class LoginPage {
     public void logOut() {
         this.currentUser = -1;
         this.type = 0;
-        System.out.println("Logged out successfully!");
     }
 
     public int getUser() {
