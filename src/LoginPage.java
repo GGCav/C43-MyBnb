@@ -67,7 +67,7 @@ public class LoginPage {
                     return;
                 } else {
                     this.currentUser = rs.getInt("uid");
-                    this.type = 1;
+                    this.type = 2;
                 }
             }else if (option.equals("3")) {
                 String queryString = "SELECT * FROM Users where username = \"" + username + "\" AND password = \"" + password+"\" AND is_admin = 1";
@@ -121,6 +121,11 @@ public class LoginPage {
                 String occupation = input.nextLine();
                 System.out.println("Enter your date of birth (yyyy-mm-dd): ");
                 String dob = input.nextLine();
+                //check date format
+                if (dob.length() != 10 || dob.charAt(4) != '-' || dob.charAt(7) != '-') {
+                    System.out.println("Invalid date format!");
+                    return;
+                }
                 //calculate age from dob using current time
                 LocalDate bdate = LocalDate.parse(dob);
                 LocalDate curDate = LocalDate.now();  
@@ -141,15 +146,15 @@ public class LoginPage {
                 }
 
                 //Enter addresses
-                System.out.println("please enter the latitude of the listing:");
+                System.out.println("please enter the latitude of the address:");
                 String latitude = input.nextLine();
-                System.out.println("please enter the longitude of the listing:");
+                System.out.println("please enter the longitude of the address:");
                 String longitude = input.nextLine();
-                System.out.println("please enter the postal code of the listing:");
+                System.out.println("please enter the postal code of the address:");
                 String postalcode = input.nextLine();
-                System.out.println("please enter the city of the listing:");
+                System.out.println("please enter the city of the address:");
                 String city = input.nextLine();
-                System.out.println("please enter the country of the listing:");
+                System.out.println("please enter the country of the address:");
                 String country = input.nextLine();
                 queryString = "SELECT * FROM Addresses WHERE latitude = " + latitude + " AND longitude = " + longitude;
                 rs = stmt.executeQuery(queryString);
@@ -171,11 +176,9 @@ public class LoginPage {
                 System.out.println("Signed up successfully!");
                 stmt.close();
                 conn.close();
-                input.close();
             }catch (SQLException e) {
                 System.err.println("Input error!");
-            }
-            
+            }        
         } else if(option.equals("2")){ //sign up as Renter
         	Class.forName(dbClassName);
             //Database credentials
@@ -201,6 +204,11 @@ public class LoginPage {
                 String occupation = input.nextLine();
                 System.out.println("Enter your date of birth (yyyy-mm-dd): ");
                 String dob = input.nextLine();
+                //check date format
+                if (dob.length() != 10 || dob.charAt(4) != '-' || dob.charAt(7) != '-') {
+                    System.out.println("Invalid date format!");
+                    return;
+                }
                 //calculate age from dob using current time
                 LocalDate bdate = LocalDate.parse(dob);
                 LocalDate curDate = LocalDate.now();  
@@ -221,15 +229,15 @@ public class LoginPage {
                 }
 
                 //Enter addresses
-                System.out.println("please enter the latitude of the listing:");
+                System.out.println("please enter the latitude of the address:");
                 String latitude = input.nextLine();
-                System.out.println("please enter the longitude of the listing:");
+                System.out.println("please enter the longitude of the address:");
                 String longitude = input.nextLine();
-                System.out.println("please enter the postal code of the listing:");
+                System.out.println("please enter the postal code of the address:");
                 String postalcode = input.nextLine();
-                System.out.println("please enter the city of the listing:");
+                System.out.println("please enter the city of the address:");
                 String city = input.nextLine();
-                System.out.println("please enter the country of the listing:");
+                System.out.println("please enter the country of the address:");
                 String country = input.nextLine();
                 queryString = "SELECT * FROM Addresses WHERE latitude = " + latitude + " AND longitude = " + longitude;
                 rs = stmt.executeQuery(queryString);
@@ -254,7 +262,6 @@ public class LoginPage {
                 System.out.println("Signed up successfully!");
                 stmt.close();
                 conn.close();
-                input.close();
             }catch (SQLException e) {
                 System.err.println("Input error!");
             }

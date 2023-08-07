@@ -1,6 +1,9 @@
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
+import java.util.ArrayList;
+
 
 public class RenterPage {
     final String USER = "root";
@@ -8,13 +11,242 @@ public class RenterPage {
     private static final String dbClassName = "com.mysql.cj.jdbc.Driver";
 	private static final String CONNECTION = "jdbc:mysql://127.0.0.1/MyBnB";
 
-    public void searchListings(int renter_id) {
-        // TODO implement here
+
+    public double deg2rad(double deg) {
+        return deg * (Math.PI/180);
     }
 
-    public void bookLising(int renter_id, int listing_id) {
+    //calculate distance between two points
+    public double distance(double lat1, double lon1, double lat2, double lon2) {
+        // TODO implement here
+        double R = 6371; // Radius of the earth in km
+        double dLat = deg2rad(lat2-lat1);  // deg2rad below
+        double dLon = deg2rad(lon2-lon1); 
+        double a = 
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+          Math.sin(dLon/2) * Math.sin(dLon/2)
+          ; 
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        double d = R * c; // Distance in km
+        return d;
+    }
+    
+
+    public void searchListings(int renter_id) {
         // TODO implement here
         Scanner input = new Scanner(System.in);
+        System.out.println("Select the search criteria:");
+        System.out.println("1 to view all listings");
+        System.out.println("2 to view by search filters");
+        String option = input.nextLine();
+        if (option.equals("1")){
+            try {
+                Class.forName(dbClassName);
+                Connection conn = DriverManager.getConnection(CONNECTION, USER, PASS);
+                Statement stmt = conn.createStatement();
+                System.out.println("Ranked by price:");
+                System.out.println("1. Ascending");
+                System.out.println("2. Descending");
+                System.out.println("3. No ranking");
+                String rankedbyPrice = input.nextLine();
+                String sql = "";
+                if (rankedbyPrice.equals("1")) {
+                    sql = "SELECT * FROM Listings ORDER BY price ASC;";
+                } else if (rankedbyPrice.equals("2")) {
+                    sql = "SELECT * FROM Listings ORDER BY price DESC;";
+                } else if (rankedbyPrice.equals("3")) {
+                    sql = "SELECT * FROM Listings;";
+                } else {
+                    System.out.println("Invalid option!");
+                    return;
+                }
+                ResultSet rs = stmt.executeQuery(sql);
+                System.out.println("Listings:");
+                while (rs.next()) {
+                    System.out.println("------------------------------------");
+                    System.out.println("Listing ID: " + rs.getInt("lid"));
+                    System.out.println("Host ID: " + rs.getInt("uid"));
+                    sql = "SELECT AVG(rating) FROM HostComments WHERE uid1 = " + rs.getInt("uid") + ";";
+                    Statement stmt2 = conn.createStatement();
+                    ResultSet rs2 = stmt2.executeQuery(sql);
+                    rs2.next();
+                    System.out.println("Host Rating: " + rs2.getString("AVG(rating)"));
+                    System.out.println("Latitude: " + rs.getString("latitude"));
+                    System.out.println("Longitude: " + rs.getString("longitude"));
+                    sql = "SELECT * FROM Addresses WHERE latitude = " + rs.getString("latitude") + " AND longitude = " + rs.getString("longitude") + ";";
+                    rs2 = stmt2.executeQuery(sql);
+                    rs2.next();
+                    System.out.println("Address: " + rs2.getString("postal_code") + ", " + rs2.getString("city") + ", " + rs2.getString("country"));
+                    sql = "SELECT AVG(price) FROM Availabilities WHERE lid = " + rs.getInt("lid") + ";";
+                    rs2 = stmt2.executeQuery(sql);
+                    rs2.next();
+                    System.out.println("Average price: " + rs2.getString("AVG(price)"));
+                    sql = "SELECT AVG(rating) FROM ListingComments WHERE lid = " + rs.getInt("lid") + ";";
+                    rs2 = stmt2.executeQuery(sql);
+                    rs2.next();
+                    System.out.println("Average rating: " + rs2.getString("AVG(rating)"));
+                    sql = "SELECT * FROM Amentity WHERE lid = " + rs.getInt("lid") + ";";
+                    rs2 = stmt2.executeQuery(sql);
+                    System.out.println("Amentity:");
+                    while (rs2.next()) {
+                        System.out.println(rs2.getString("type"));
+                    }
+                    System.out.println("------------------------------------");
+                    stmt2.close();
+                }
+                stmt.close();
+                conn.close();
+            } catch (Exception e) {
+                System.out.println("Error!");
+                System.out.println(e.getMessage());
+            }
+        } else if (option.equals("2")){
+            try {
+                Class.forName(dbClassName);
+                Connection conn = DriverManager.getConnection(CONNECTION, USER, PASS);
+                Statement stmt = conn.createStatement();
+                String choice = "";
+                String latitude = "";
+                String longitude = "";
+                String distance = "";
+                String lowest_price = "";
+                String highest_price = "";
+                List<String> amenities = new ArrayList<String>();
+                System.out.println("Filling the filter:");
+                while (choice != "0"){
+                    System.out.println("1. Latitude");
+                    System.out.println("2. Longitude");
+                    System.out.println("3. Distance");
+                    System.out.println("4. Lowest price");
+                    System.out.println("5. Highest price");
+                    System.out.println("6. Amenities");
+                    System.out.println("0. Done");
+                    choice = input.nextLine();
+                    if (choice.equals("1")){
+                        System.out.println("Enter the latitude:");
+                        latitude = input.nextLine();
+                    } else if (choice.equals("2")){
+                        System.out.println("Enter the longitude:");
+                        longitude = input.nextLine();
+                    } else if (choice.equals("3")){
+                        System.out.println("Enter the distance:");
+                        distance = input.nextLine();
+                    } else if (choice.equals("4")){
+                        System.out.println("Enter the lowest price:");
+                        lowest_price = input.nextLine();
+                    } else if (choice.equals("5")){
+                        System.out.println("Enter the highest price:");
+                        highest_price = input.nextLine();
+                    } else if (choice.equals("6")){
+                        System.out.println("Enter the amenities:");
+                        String amenity = input.nextLine();
+                        amenities.add(amenity);
+                    } else if (choice.equals("0")){
+                        break;
+                    } else {
+                        System.out.println("Invalid option!");
+                        continue;
+                    }
+                }
+                //select the listings that match the filters
+                String sql = "SELECT * FROM Listings;";
+                PreparedStatement pstmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                ResultSet rs = pstmt.executeQuery(sql);
+                //copy the forward only result set to a scrollable result set
+                rs.beforeFirst();
+                if (latitude != "" && longitude != "" && distance != ""){
+                    while (rs.next()) {
+                        if (distance(Double.parseDouble(latitude), Double.parseDouble(longitude), Double.parseDouble(rs.getString("latitude")), Double.parseDouble(rs.getString("longitude"))) > Double.parseDouble(distance)){
+                            rs.deleteRow();
+                        }
+                    }
+                }
+                if (lowest_price != "" && highest_price != ""){
+                    rs.beforeFirst();
+                    while (rs.next()) {
+                        if (Double.parseDouble(rs.getString("price")) < Double.parseDouble(lowest_price) || Double.parseDouble(rs.getString("price")) > Double.parseDouble(highest_price)){
+                            rs.deleteRow();
+                        }
+                    }
+                } else if (lowest_price != ""){
+                    rs.beforeFirst();
+                    while (rs.next()) {
+                        if (Double.parseDouble(rs.getString("price")) < Double.parseDouble(lowest_price)){
+                            rs.deleteRow();
+                        }
+                    }
+                } else if (highest_price != ""){
+                    rs.beforeFirst();
+                    while (rs.next()) {
+                        if (Double.parseDouble(rs.getString("price")) > Double.parseDouble(highest_price)){
+                            rs.deleteRow();
+                        }
+                    }
+                }
+                if (amenities != null){
+                    rs.beforeFirst();
+                    while (rs.next()) {
+                        for (String amenity : amenities){
+                            sql = "SELECT * FROM Amentity WHERE lid = " + rs.getInt("lid") + " AND type = '" + amenity + "';";
+                            ResultSet rs2 = stmt.executeQuery(sql);
+                            if (!rs2.next()){
+                                rs.deleteRow();
+                            }
+                        }
+                    }
+                }
+                //print the listings
+                System.out.println("Satisfied listings:");
+                rs.beforeFirst();
+                while (rs.next()) {
+                    System.out.println("------------------------------------");
+                    System.out.println("Listing ID: " + rs.getInt("lid"));
+                    System.out.println("Host ID: " + rs.getInt("uid"));
+                    sql = "SELECT AVG(rating) FROM HostComments WHERE uid1 = " + rs.getInt("uid") + ";";
+                    Statement stmt2 = conn.createStatement();
+                    ResultSet rs2 = stmt2.executeQuery(sql);
+                    rs2.next();
+                    System.out.println("Host Rating: " + rs2.getString("AVG(rating)"));
+                    System.out.println("Latitude: " + rs.getString("latitude"));
+                    System.out.println("Longitude: " + rs.getString("longitude"));
+                    sql = "SELECT * FROM Addresses WHERE latitude = " + rs.getString("latitude") + " AND longitude = " + rs.getString("longitude") + ";";
+                    rs2 = stmt2.executeQuery(sql);
+                    rs2.next();
+                    System.out.println("Address: " + rs2.getString("postal_code") + ", " + rs2.getString("city") + ", " + rs2.getString("country"));
+                    sql = "SELECT AVG(price) FROM Availabilities WHERE lid = " + rs.getInt("lid") + ";";
+                    rs2 = stmt2.executeQuery(sql);
+                    rs2.next();
+                    System.out.println("Average price: " + rs2.getString("AVG(price)"));
+                    sql = "SELECT AVG(rating) FROM ListingComments WHERE lid = " + rs.getInt("lid") + ";";
+                    rs2 = stmt2.executeQuery(sql);
+                    rs2.next();
+                    System.out.println("Average rating: " + rs2.getString("AVG(rating)"));
+                    sql = "SELECT * FROM Amentity WHERE lid = " + rs.getInt("lid") + ";";
+                    rs2 = stmt2.executeQuery(sql);
+                    System.out.println("Amentity:");
+                    while (rs2.next()) {
+                        System.out.println(rs2.getString("type"));
+                    }
+                    System.out.println("------------------------------------");
+                }
+                stmt.close();
+                pstmt.close();
+                conn.close();
+            } catch (Exception e) {
+                System.out.println("Error!");
+                System.out.println(e.getMessage());
+            }
+        }
+
+
+    }
+
+    public void bookLising(int renter_id) {
+        // TODO implement here
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter the listing id:");
+        int listing_id = input.nextInt();
         System.out.println("Enter the start date in yyyy-mm-dd:");
         String start_date = input.nextLine();
         //check date format
@@ -210,6 +442,7 @@ public class RenterPage {
             Connection conn = DriverManager.getConnection(CONNECTION, USER, PASS);
             Statement stmt = conn.createStatement();
             String sql = "SELECT * FROM Renters inner join Users on Renters.uid = Users.uid WHERE Renters.uid = \"" + renter_id + "\";";
+            System.out.println(sql);
             ResultSet rs = stmt.executeQuery(sql);
             rs.next();
             System.out.println("====================================");
