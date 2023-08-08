@@ -19,6 +19,7 @@ public class HostPage {
             System.out.println("1. House");
             System.out.println("2. Apartment");
             System.out.println("3. Guesthouse");
+            System.out.println("4. Hotel");
             type = input.nextLine();
         }
         if (type.equals("1")) {
@@ -27,6 +28,8 @@ public class HostPage {
             type = "Apartment";
         } else if (type.equals("3")) {
             type = "Guesthouse";
+        } else if (type.equals("4")) {
+            type = "Hotel"; 
         }
         System.out.println("please enter the latitude of the listing:");
         String latitude = input.nextLine();
@@ -266,6 +269,7 @@ public class HostPage {
                 System.out.println("1. House");
                 System.out.println("2. Apartment");
                 System.out.println("3. Guesthouse");
+                System.out.println("4. Hotel");
                 type = input.nextLine();
             }
             if (type.equals("1")) {
@@ -274,6 +278,8 @@ public class HostPage {
                 type = "Apartment";
             } else if (type.equals("3")) {
                 type = "Guesthouse";
+            } else if (type.equals("4")) {
+                type = "Hotel"; 
             }
             System.out.println("please enter the latitude of the listing:");
             String latitude = input.nextLine();
