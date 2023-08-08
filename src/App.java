@@ -125,7 +125,7 @@ public class App {
             } else if (loginPage.getType() == 3){
                 //Admin interface
                 String admin_option = "";
-                while (!admin_option.equals("5")) {
+                while (!admin_option.equals("8")) {
                     System.out.println("Please select an option:");
                     System.out.println("1 to view total number of bookings");
                     System.out.println("2 to view total number of listings");
@@ -162,6 +162,7 @@ public class App {
                         //logout
                         System.out.println("Goodbye! "+loginPage.getUsername());
                         loginPage.logOut();
+                        break;
                     } else {
                         System.out.println("Invalid option!");
                         continue;

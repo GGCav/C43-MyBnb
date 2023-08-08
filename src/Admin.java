@@ -1,5 +1,13 @@
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+
 
 public class Admin {
     final String USER = "root";
@@ -132,7 +140,6 @@ public class Admin {
         }
     }
 
-    //
     public void rankHosts(){
         // TODO implement here
         System.out.println("1. Rank the hosts by the total number of listings per country");
@@ -244,6 +251,8 @@ public class Admin {
             } else {
                 System.out.println("Invalid option!");
             }
+        }catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -296,7 +305,8 @@ public class Admin {
                     System.out.println("-----------------------------");
                     System.out.println("City: "+rs.getString("city"));
                     String sql2 = "SELECT COUNT(*) , Users.username FROM Bookings inner join Users on Bookings.uid = Users.uid inner join Listings on Bookings.lid = Listings.lid inner join Addresses on Listings.latitude = Addresses.latitude AND Listings.longitude = Addresses.longitude WHERE Bookings.start_date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) AND Addresses.city = '"+rs.getString("city")+"' GROUP BY Users.username ORDER BY COUNT(*) DESC;";
-                    ResultSet rs2 = stmt.executeQuery(sql2);
+                    Statement stmt2 = conn.createStatement();
+                    ResultSet rs2 = stmt2.executeQuery(sql2);
                     while (rs2.next()) {
                         if (rs2.getInt("COUNT(*)") <= 1){
                             break;
@@ -305,6 +315,7 @@ public class Admin {
                         System.out.println("Total number of bookings: "+rs2.getString("COUNT(*)"));
                     }
                     System.out.println("-----------------------------");
+                    stmt2.close();
                 }
                 conn.close();
             } catch (Exception e) {
@@ -338,5 +349,52 @@ public class Admin {
 
     public void viewWordCloud(){
         // TODO implement here
+        try {
+            Class.forName(dbClassName);
+            Connection conn = DriverManager.getConnection(CONNECTION, USER, PASS);
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT * FROM Listings;";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                System.out.println("-----------------------------");
+                System.out.println("Listing ID: "+rs.getString("lid"));
+                System.out.println("Word cloud: ");
+                String sql2 = "SELECT * FROM ListingComments WHERE lid = '"+rs.getString("lid")+"';";
+                Statement stmt2 = conn.createStatement();
+                ResultSet rs2 = stmt2.executeQuery(sql2);
+                //Record the frequency of each word in a dictionary
+                Dictionary<String, Integer> dict = new Hashtable<String, Integer>();
+                while (rs2.next()) {
+                    String[] words = rs2.getString("comment").split(" ");
+                    for (String word : words){
+                        if (dict.get(word) == null){
+                            dict.put(word, 1);
+                        } else {
+                            dict.put(word, dict.get(word)+1);
+                        }
+                    }
+                }
+                //Sort the dictionary by the frequency of each word
+                List<Map.Entry<String, Integer>> list = new ArrayList<Map.Entry<String, Integer>>(((Hashtable<String, Integer>) dict).entrySet());
+                Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+                    //Descending order
+                    public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                        return o2.getValue().compareTo(o1.getValue()); 
+                    }
+                });
+                //Print the top 5 words
+                int count = 0;
+                for (Map.Entry<String, Integer> mapping : list) {
+                    System.out.println(mapping.getKey());
+                    count++;
+                    if (count == 5){
+                        break;
+                    }
+                }
+                System.out.println("-----------------------------");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
