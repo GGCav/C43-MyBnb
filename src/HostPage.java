@@ -468,6 +468,9 @@ public class HostPage {
             while (!choice.equals("0")) {
                 System.out.println("Enter 0 to finish deleting amenities");
                 System.out.println("Enter the name of the amenity you want to delete:");
+                if (choice.equals("0")) {
+                    break;
+                }
                 choice = input.nextLine();
                 //check if amenity exists
                 sql = "SELECT * FROM Amentity WHERE lid = " + lid + " AND type = '" + choice + "';";
