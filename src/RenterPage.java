@@ -91,6 +91,12 @@ public class RenterPage {
                     rs2 = stmt2.executeQuery(sql);
                     rs2.next();
                     System.out.println("Average rating: " + rs2.getString("AVG(rating)"));
+                    sql = "SELECT content FROM ListingComments WHERE lid = " + rs.getInt("lid") + ";";
+                    rs2 = stmt2.executeQuery(sql);
+                    System.out.println("Comments:");
+                    while (rs2.next()) {
+                        System.out.println(rs2.getString("content"));
+                    }
                     sql = "SELECT * FROM Amentity WHERE lid = " + rs.getInt("lid") + ";";
                     rs2 = stmt2.executeQuery(sql);
                     System.out.println("Amentity:");
@@ -299,6 +305,12 @@ public class RenterPage {
                     rs2 = stmt2.executeQuery(sql);
                     rs2.next();
                     System.out.println("Average rating: " + rs2.getString("AVG(rating)"));
+                    sql = "SELECT content FROM ListingComments WHERE lid = " + rowset.getInt("lid") + ";";
+                    rs2 = stmt2.executeQuery(sql);
+                    System.out.println("Comments:");
+                    while (rs2.next()) {
+                        System.out.println(rs2.getString("content"));
+                    }
                     sql = "SELECT * FROM Amentity WHERE lid = " + rowset.getInt("lid") + ";";
                     rs2 = stmt2.executeQuery(sql);
                     System.out.println("Amentity:");
