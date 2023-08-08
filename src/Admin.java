@@ -159,12 +159,14 @@ public class Admin {
                     System.out.println("Country: "+rs.getString("country"));
                     //get hosts
                     String sql2 = "SELECT COUNT(*) , Users.username FROM Listings inner join Users on Listings.uid = Users.uid inner join Addresses on Listings.latitude = Addresses.latitude AND Listings.longitude = Addresses.longitude WHERE Addresses.country = '"+rs.getString("country")+"' GROUP BY Users.username ORDER BY COUNT(*) DESC;";
-                    ResultSet rs2 = stmt.executeQuery(sql2);
+                    Statement stmt2 = conn.createStatement();
+                    ResultSet rs2 = stmt2.executeQuery(sql2);
                     while (rs2.next()) {
                         System.out.println("Host: "+rs2.getString("Users.username"));
                         System.out.println("Total number of listings: "+rs2.getString("COUNT(*)"));
                     }
                     System.out.println("-----------------------------");
+                    stmt2.close();
                 }
                 stmt.close();
             } else if (option.equals("2")){
@@ -176,12 +178,14 @@ public class Admin {
                     System.out.println("City: "+rs.getString("city"));
                     //get hosts
                     String sql2 = "SELECT COUNT(*) , Users.username FROM Listings inner join Users on Listings.uid = Users.uid inner join Addresses on Listings.latitude = Addresses.latitude AND Listings.longitude = Addresses.longitude WHERE Addresses.city = '"+rs.getString("city")+"' GROUP BY Users.username ORDER BY COUNT(*) DESC;";
-                    ResultSet rs2 = stmt.executeQuery(sql2);
+                    Statement stmt2 = conn.createStatement();
+                    ResultSet rs2 = stmt2.executeQuery(sql2);
                     while (rs2.next()) {
                         System.out.println("Host: "+rs2.getString("Users.username"));
                         System.out.println("Total number of listings: "+rs2.getString("COUNT(*)"));
                     }
                     System.out.println("-----------------------------");
+                    stmt2.close();
                 }
                 stmt.close();
             } else {
@@ -210,12 +214,13 @@ public class Admin {
                     System.out.println("Country: "+rs.getString("country"));
                     //get total listings in this country
                     String sql2 = "SELECT COUNT(*) FROM Listings inner join Addresses on Listings.latitude = Addresses.latitude AND Listings.longitude = Addresses.longitude WHERE Addresses.country = '"+rs.getString("country")+"';";
-                    ResultSet rs2 = stmt.executeQuery(sql2);
+                    Statement stmt2 = conn.createStatement();
+                    ResultSet rs2 = stmt2.executeQuery(sql2);
                     rs2.next();
                     int total_listings = rs2.getInt("COUNT(*)");
                     System.out.println("Total number of listings: "+total_listings);
                     sql2 = "SELECT COUNT(*) , Users.username FROM Listings inner join Users on Listings.uid = Users.uid inner join Addresses on Listings.latitude = Addresses.latitude AND Listings.longitude = Addresses.longitude WHERE Addresses.country = '"+rs.getString("country")+"' GROUP BY Users.username ORDER BY COUNT(*) DESC;";
-                    rs2 = stmt.executeQuery(sql2);
+                    rs2 = stmt2.executeQuery(sql2);
                     System.out.println("Commercial hosts:");
                     while (rs2.next()) {
                         int number = rs2.getInt("COUNT(*)");
@@ -223,6 +228,7 @@ public class Admin {
                             System.out.println("Username: "+rs2.getString("Users.username")+"; Number of listings: "+number);
                         }
                     }
+                    stmt2.close();
                     System.out.println("-----------------------------");
                 }
             } else if (option.equals("2")){
@@ -233,12 +239,13 @@ public class Admin {
                     System.out.println("City: "+rs.getString("city"));
                     //get total listings in this city
                     String sql2 = "SELECT COUNT(*) FROM Listings inner join Addresses on Listings.latitude = Addresses.latitude AND Listings.longitude = Addresses.longitude WHERE Addresses.city = '"+rs.getString("city")+"';";
-                    ResultSet rs2 = stmt.executeQuery(sql2);
+                    Statement stmt2 = conn.createStatement();
+                    ResultSet rs2 = stmt2.executeQuery(sql2);
                     rs2.next();
                     int total_listings = rs2.getInt("COUNT(*)");
                     System.out.println("Total number of listings: "+total_listings);
                     sql2 = "SELECT COUNT(*) , Users.username FROM Listings inner join Users on Listings.uid = Users.uid inner join Addresses on Listings.latitude = Addresses.latitude AND Listings.longitude = Addresses.longitude WHERE Addresses.city = '"+rs.getString("city")+"' GROUP BY Users.username ORDER BY COUNT(*) DESC;";
-                    rs2 = stmt.executeQuery(sql2);
+                    rs2 = stmt2.executeQuery(sql2);
                     System.out.println("Commercial hosts:");
                     while (rs2.next()) {
                         int number = rs2.getInt("COUNT(*)");
@@ -247,6 +254,7 @@ public class Admin {
                         }
                     }
                     System.out.println("-----------------------------");
+                    stmt2.close();
                 }
             } else {
                 System.out.println("Invalid option!");
