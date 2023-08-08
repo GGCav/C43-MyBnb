@@ -133,7 +133,7 @@ public class App {
                     System.out.println("4 to view possible commercial hosts");
                     System.out.println("5 to rank renters by number of bookings");
                     System.out.println("6 to view hosts and renters with most cancellations");
-                    System.out.println("7 to view the word clould of listings");
+                    System.out.println("7 to view the word cloud of listings");
                     System.out.println("8 to logout");
                     admin_option = input.nextLine();
                     Admin admin = new Admin();
@@ -156,7 +156,7 @@ public class App {
                         //view hosts and renters with most cancellations
                         admin.viewCancellations();
                     } else if (admin_option.equals("7")) {
-                        //view the word clould of listings
+                        //view the word cloud of listings
                         admin.viewWordCloud();
                     } else if (admin_option.equals("8")) {
                         //logout
