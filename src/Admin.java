@@ -340,18 +340,26 @@ public class Admin {
             Class.forName(dbClassName);
             Connection conn = DriverManager.getConnection(CONNECTION, USER, PASS);
             Statement stmt = conn.createStatement();
-            String sql = "SELECT COUNT(*) , Users.username FROM Bookings inner join Users inner join Hosts on Bookings.cancelled_by = Users.uid AND Hosts.uid = Users.uid WHERE Bookings.cancelled = 1 AND Bookings.start_date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) GROUP BY Users.uid ORDER BY COUNT(*) DESC;";
-            ResultSet rs = stmt.executeQuery(sql);
-            rs.next();
-            System.out.println("Hosts with the most cancellations:" + rs.getString("Users.username") + " " + rs.getString("COUNT(*)"));
-            sql = "SELECT COUNT(*) , Users.username FROM Bookings inner join Users inner join Renters on Bookings.cancelled_by = Users.uid AND Renters.uid = Users.uid WHERE Bookings.cancelled = 1 AND Bookings.start_date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) GROUP BY Users.uid ORDER BY COUNT(*) DESC;";
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            System.out.println("Renters with the most cancellations:" + rs.getString("Users.username") + " " + rs.getString("COUNT(*)"));
+            try {
+                String sql = "SELECT COUNT(*) , Users.username FROM Bookings inner join Users inner join Hosts on Bookings.cancelled_by = Users.uid AND Hosts.uid = Users.uid WHERE Bookings.cancelled = 1 AND Bookings.start_date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) GROUP BY Users.uid ORDER BY COUNT(*) DESC;";
+                ResultSet rs = stmt.executeQuery(sql);
+                rs.next();
+                System.out.println("Hosts with the most cancellations:" + rs.getString("Users.username") + " " + rs.getString("COUNT(*)"));
+            }catch (Exception e) {
+                System.out.println("No hosts with the most cancellations!");
+            }
+            try {
+                String sql = "SELECT COUNT(*) , Users.username FROM Bookings inner join Users inner join Renters on Bookings.cancelled_by = Users.uid AND Renters.uid = Users.uid WHERE Bookings.cancelled = 1 AND Bookings.start_date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) GROUP BY Users.uid ORDER BY COUNT(*) DESC;";
+                ResultSet rs = stmt.executeQuery(sql);
+                rs.next();
+                System.out.println("Renters with the most cancellations:" + rs.getString("Users.username") + " " + rs.getString("COUNT(*)"));
+            } catch (Exception e) {
+                System.out.println("No renters with the most cancellations!");
+            }
             stmt.close();
             conn.close();
         } catch (Exception e) {
-            System.out.println("No cancellations!");
+            
         }
     }
 

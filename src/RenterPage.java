@@ -92,6 +92,12 @@ public class RenterPage {
                     while (rs2.next()) {
                         System.out.println(rs2.getString("type"));
                     }
+                    sql = "SELECT * FROM Availabilities WHERE lid = " + rs.getInt("lid") + ";";
+                    rs2 = stmt2.executeQuery(sql);
+                    System.out.println("Availabilities:");
+                    while (rs2.next()) {
+                        System.out.println(rs2.getString("date") + " " + rs2.getString("price"));
+                    }
                     System.out.println("------------------------------------");
                     stmt2.close();
                 }
@@ -112,6 +118,8 @@ public class RenterPage {
                 String distance = "";
                 String lowest_price = "";
                 String highest_price = "";
+                String StartDate = "";
+                String EndDate = "";
                 List<String> amenities = new ArrayList<String>();
                 System.out.println("Filling the filter:");
                 while (choice != "0"){
@@ -121,6 +129,8 @@ public class RenterPage {
                     System.out.println("4. Lowest price");
                     System.out.println("5. Highest price");
                     System.out.println("6. Amenities");
+                    System.out.println("7. Start Date");
+                    System.out.println("8. End Date");
                     System.out.println("0. Done");
                     choice = input.nextLine();
                     if (choice.equals("1")){
@@ -142,6 +152,22 @@ public class RenterPage {
                         System.out.println("Enter the amenities:");
                         String amenity = input.nextLine();
                         amenities.add(amenity);
+                    } else if (choice.equals("7")){
+                        System.out.println("Enter the start date:");
+                        StartDate = input.nextLine();
+                        if (StartDate.length() != 10 || StartDate.charAt(4) != '-' || StartDate.charAt(7) != '-') {
+                            System.out.println("Invalid date!");
+                            StartDate = "";
+                            continue;
+                        }
+                    } else if (choice.equals("8")){
+                        System.out.println("Enter the end date:");
+                        EndDate = input.nextLine();
+                        if (EndDate.length() != 10 || EndDate.charAt(4) != '-' || EndDate.charAt(7) != '-') {
+                            System.out.println("Invalid date!");
+                            EndDate = "";
+                            continue;
+                        }
                     } else if (choice.equals("0")){
                         break;
                     } else {
@@ -196,6 +222,34 @@ public class RenterPage {
                         }
                     }
                 }
+                if (StartDate != "" && EndDate != ""){
+                    rs.beforeFirst();
+                    while (rs.next()) {
+                        sql = "SELECT * FROM Availabilities WHERE lid = " + rs.getInt("lid") + " AND date >= '" + StartDate + "' AND date <= '" + EndDate + "';";
+                        ResultSet rs2 = stmt.executeQuery(sql);
+                        if (!rs2.next()){
+                            rs.deleteRow();
+                        }
+                    }
+                } else if (StartDate != ""){
+                    rs.beforeFirst();
+                    while (rs.next()) {
+                        sql = "SELECT * FROM Availabilities WHERE lid = " + rs.getInt("lid") + " AND date >= '" + StartDate + "';";
+                        ResultSet rs2 = stmt.executeQuery(sql);
+                        if (!rs2.next()){
+                            rs.deleteRow();
+                        }
+                    }
+                } else if (EndDate != ""){
+                    rs.beforeFirst();
+                    while (rs.next()) {
+                        sql = "SELECT * FROM Availabilities WHERE lid = " + rs.getInt("lid") + " AND date <= '" + EndDate + "';";
+                        ResultSet rs2 = stmt.executeQuery(sql);
+                        if (!rs2.next()){
+                            rs.deleteRow();
+                        }
+                    }
+                }
                 //print the listings
                 System.out.println("Satisfied listings:");
                 rs.beforeFirst();
@@ -227,6 +281,12 @@ public class RenterPage {
                     System.out.println("Amentity:");
                     while (rs2.next()) {
                         System.out.println(rs2.getString("type"));
+                    }
+                    sql = "SELECT * FROM Availabilities WHERE lid = " + rs.getInt("lid") + ";";
+                    rs2 = stmt2.executeQuery(sql);
+                    System.out.println("Availabilities:");
+                    while (rs2.next()) {
+                        System.out.println(rs2.getString("date") + " " + rs2.getString("price"));
                     }
                     System.out.println("------------------------------------");
                 }
@@ -346,6 +406,11 @@ public class RenterPage {
             String start_date = input.nextLine();
             //check date format
             if (start_date.length() != 10 || start_date.charAt(4) != '-' || start_date.charAt(7) != '-') {
+                System.out.println("Invalid date!");
+                return;
+            }
+            //check date is not in the past
+            if (start_date.compareTo(LocalDate.now().toString()) < 0) {
                 System.out.println("Invalid date!");
                 return;
             }
