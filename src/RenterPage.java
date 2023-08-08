@@ -246,7 +246,7 @@ public class RenterPage {
         // TODO implement here
         Scanner input = new Scanner(System.in);
         System.out.println("Enter the listing id:");
-        int listing_id = input.nextInt();
+        String listing_id = input.nextLine();
         System.out.println("Enter the start date in yyyy-mm-dd:");
         String start_date = input.nextLine();
         //check date format
@@ -289,7 +289,7 @@ public class RenterPage {
                     return;
                 }
             }
-            String sql = "INSERT INTO Bookings (lid, uid, start_date, end_date, cancelled) VALUES (" + listing_id + ", " + renter_id + ", '" + start_date + "', '" + end_date + "', '0');" ;
+            String sql = "INSERT INTO Bookings (lid, uid, start_date, end_date, cancelled, cancelled_by) VALUES (" + listing_id + ", " + renter_id + ", '" + start_date + "', '" + end_date + "', '0', '0');" ;
             stmt.executeUpdate(sql);
             for (LocalDate date = LocalDate.parse(start_date); date.compareTo(LocalDate.parse(end_date)) <= 0; date = date.plusDays(1)) {
                 sql = "DELETE FROM Availabilities WHERE lid = " + listing_id + " AND date = '" + date.toString() + "';";
@@ -308,19 +308,18 @@ public class RenterPage {
         // TODO implement here
         Scanner input = new Scanner(System.in);
         System.out.println("Enter the listing id:");
-        int lid = input.nextInt();
+        String lid = input.nextLine();
         try {
             Class.forName(dbClassName);
             Connection conn = DriverManager.getConnection(CONNECTION, USER, PASS);
             Statement stmt = conn.createStatement();
-            String sql = "SELECT * FROM Bookings WHERE lid = " + lid + " AND uid = " + renter_id + " AND cancelled = '0';";
+            String sql = "SELECT * FROM Bookings WHERE lid = " + lid + " AND uid = " + renter_id + " AND cancelled = '0' and start_date >= CURDATE();";
             ResultSet rs = stmt.executeQuery(sql);
             System.out.println("Bookings:");
             while (rs.next()) {
                 System.out.println("------------------------------------");
                 System.out.println("Start Date: " + rs.getString("start_date"));
                 System.out.println("End Date: " + rs.getString("end_date"));
-                System.out.println("Cancelled: " + rs.getString("cancelled"));
                 System.out.println("------------------------------------");
             }
             System.out.println("Enter the start date in yyyy-mm-dd:");
@@ -337,12 +336,8 @@ public class RenterPage {
                 System.out.println("Invalid date!");
                 return;
             }
-            sql = "UPDATE Bookings SET cancelled = '1' AND cancelled_by = '" + renter_id + "' WHERE lid = " + lid + " AND uid = " + renter_id + " AND start_date = '" + start_date + "' AND end_date = '" + end_date + "';";
+            sql = "UPDATE Bookings SET cancelled = '1' , cancelled_by = '" + renter_id + "' WHERE lid = " + lid + " AND uid = " + renter_id + " AND start_date = '" + start_date + "' AND end_date = '" + end_date + "';";
             stmt.executeUpdate(sql);
-            for (LocalDate date = LocalDate.parse(start_date); date.compareTo(LocalDate.parse(end_date)) <= 0; date = date.plusDays(1)) {
-                sql = "INSERT INTO Availabilities (lid, date) VALUES (" + lid + ", '" + date.toString() + "');";
-                stmt.executeUpdate(sql);
-            }
             System.out.println("Booking cancelled!");
             stmt.close();
             conn.close();
@@ -369,7 +364,7 @@ public class RenterPage {
             }
             System.out.println("Enter the listing id:");
             Scanner input = new Scanner(System.in);
-            int lid = input.nextInt();
+            String lid = input.nextLine();
             //check if the listing id is in the bookings
             sql = "SELECT * FROM Bookings WHERE lid = " + lid + " AND uid = " + renter_id + " AND cancelled = '0' AND end_date < CURDATE();";
             rs = stmt.executeQuery(sql);
@@ -380,7 +375,7 @@ public class RenterPage {
             System.out.println("Enter the comment for the listing:");
             String comment = input.nextLine();
             System.out.println("Enter the rating for the listing:");
-            int rating = input.nextInt();
+            int rating = Integer.parseInt(input.nextLine());
             if (rating < 0 || rating > 5) {
                 System.out.println("Invalid rating!");
                 return;
@@ -390,7 +385,7 @@ public class RenterPage {
             System.out.println("Enter the comment for the host:"); 
             comment = input.nextLine();
             System.out.println("Enter the rating for the host:");
-            rating = input.nextInt();
+            rating = Integer.parseInt(input.nextLine());
             if (rating < 0 || rating > 5) {
                 System.out.println("Invalid rating!");
                 return;
@@ -442,7 +437,6 @@ public class RenterPage {
             Connection conn = DriverManager.getConnection(CONNECTION, USER, PASS);
             Statement stmt = conn.createStatement();
             String sql = "SELECT * FROM Renters inner join Users on Renters.uid = Users.uid WHERE Renters.uid = \"" + renter_id + "\";";
-            System.out.println(sql);
             ResultSet rs = stmt.executeQuery(sql);
             rs.next();
             System.out.println("====================================");
@@ -528,7 +522,7 @@ public class RenterPage {
                 sql = "INSERT INTO Addresses (latitude, longitude, postal_code, city, country) VALUES ('" + latitude + "','" + longitude + "', '" + postal_code + "', '" + city + "', '" + country + "');";
                 stmt.executeUpdate(sql);
             }
-            sql = "UPDATE Users SET first_name = '" + first_name + "', last_name = '" + last_name + "', date_of_birth = '" + date_of_birth + "', SIN = '" + sin + "', occupation = '" + occupation + "', phone_number = '" + phone_number + "', latitude = '" + latitude + "', longitude = '" + longitude + "' WHERE uid = " + renter_id + ";";
+            sql = "UPDATE Users SET first_name = '" + first_name + "', last_name = '" + last_name + "', date_of_birth = '" + date_of_birth + "', SIN = '" + sin + "', occupation = '" + occupation + "', phone = '" + phone_number + "', latitude = '" + latitude + "', longitude = '" + longitude + "' WHERE uid = " + renter_id + ";";
             stmt.executeUpdate(sql);
             sql = "UPDATE Renters SET card_number = '" + card_number + "' WHERE uid = " + renter_id + ";";
             stmt.executeUpdate(sql);

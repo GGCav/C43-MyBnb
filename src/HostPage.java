@@ -778,7 +778,7 @@ public class HostPage {
                     ResultSet rs4 = stmt4.executeQuery(sql);
                     System.out.println("Availabilities:");
                     while (rs4.next()) {
-                        System.out.println("Date: " + rs4.getString("Date"+ "; Price: " + rs4.getString("price")));
+                        System.out.println("Date: " + rs4.getString("Date")+ "; Price: " + rs4.getString("price"));
                     }
                     //print comments for this listing
                     sql = "SELECT * FROM ListingComments WHERE lid = \"" + rs.getInt("lid") + "\";";
@@ -830,7 +830,7 @@ public class HostPage {
 
     public void comment(int host_id) {
         // TODO implement here
-        System.out.println("Enter the listing ID you want to comment:");
+        System.out.println("Enter the listing ID the renter rented :");
         Scanner input = new Scanner(System.in);
         String lid = input.nextLine();
         //check listing belongs to host
@@ -972,7 +972,7 @@ public class HostPage {
                 sql = "INSERT INTO Addresses (latitude, longitude, postal_code, city, country) VALUES ('" + latitude + "','" + longitude + "', '" + postal_code + "', '" + city + "', '" + country + "');";
                 stmt.executeUpdate(sql);
             }
-            sql = "UPDATE Users SET first_name = '" + first_name + "', last_name = '" + last_name + "', date_of_birth = '" + date_of_birth + "', SIN = '" + sin + "', occupation = '" + occupation + "', phone_number = '" + phone_number + "', latitude = '" + latitude + "', longitude = '" + longitude + "' WHERE uid = " + host_id + ";";
+            sql = "UPDATE Users SET first_name = '" + first_name + "', last_name = '" + last_name + "', date_of_birth = '" + date_of_birth + "', SIN = '" + sin + "', occupation = '" + occupation + "', phone = '" + phone_number + "', latitude = '" + latitude + "', longitude = '" + longitude + "' WHERE uid = " + host_id + ";";
             stmt.executeUpdate(sql);
             System.out.println("Account updated!");
             rs.close();
