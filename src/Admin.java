@@ -365,7 +365,7 @@ public class Admin {
                 //Record the frequency of each word in a dictionary
                 Dictionary<String, Integer> dict = new Hashtable<String, Integer>();
                 while (rs2.next()) {
-                    String[] words = rs2.getString("comment").split(" ");
+                    String[] words = rs2.getString("content").split(" ");
                     for (String word : words){
                         if (dict.get(word) == null){
                             dict.put(word, 1);

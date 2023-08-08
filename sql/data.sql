@@ -45,18 +45,18 @@ INSERT INTO Hosts VALUES (7, 1), (8, 1), (9, 2), (10, 3), (11, 1);
 UNLOCK TABLES;
 
  WRITE;
-INSERT INTO Listings VALUES (1, 7, 'House', 40.73379665458717, -73.99854080178514), 
-(2, 8, 'Apartment', 34.0899187402365, -118.36360049630225), 
-(3, 9, 'House', 46.80510493748119, -71.24604289925429), 
-(4, 9, 'Guest House', 46.8116289090848, -71.2855564737058), 
-(5, 10, 'Hotel', 34.100097244255245, -118.35532034007466), 
-(6, 10, 'Hotel', 13.755392044092686, 100.49650903167074), 
-(7, 10, 'Apartment', 33.99379046263081, -81.02632347594214), 
-(8, 11, 'House', 49.154700278737586, -123.14019494989762);
+INSERT INTO Listings VALUES (1, 7, 'House', 40.73379665458717, -73.99854080178514, 200), 
+(2, 8, 'Apartment', 34.0899187402365, -118.36360049630225, 200), 
+(3, 9, 'House', 46.80510493748119, -71.24604289925429, 250), 
+(4, 9, 'Guest House', 46.8116289090848, -71.2855564737058, 250), 
+(5, 10, 'Hotel', 34.100097244255245, -118.35532034007466, 250), 
+(6, 10, 'Hotel', 13.755392044092686, 100.49650903167074, 250), 
+(7, 10, 'Apartment', 33.99379046263081, -81.02632347594214, 300), 
+(8, 11, 'House', 49.154700278737586, -123.14019494989762, 300);
 UNLOCK TABLES;
 
-LOCK TABLES Amenity WRITE;
-INSERT INTO Amenity VALUES ('Indoor fireplace', 1), ('BBQ grill', 1), ('Kitchen', 1), ('Heating', 1), ('Free parking', 1), ('Air conditioning', 2), ('Heating', 2), ('Hair dryer', 2), ('TV', 2), ('Smoke alarm', 2), ('Indoor fireplace', 3), ('BBQ grill', 3), ('Kitchen', 3​​), ('Heating', 3), ('Air conditioning', 3), ('Hair dryer', 3), ('TV', 3), ('Free parking', 3), ('Smoke alarm', 3), ('Waterfront', 3), ('Heating', 4), ('Air conditioning', 4), ('Hair dryer', 4), ('TV', 4), ('Free parking', 4), ('Smoke alarm', 4), ('Wifi', 4), ('Free parking', 5), ('Air conditioning', 5), ('Heating', 5), ('Hair dryer', 5), ('TV', 5), ('Breakfast', 5), ('Gym', 5), ('Smoke alarm', 5), ('Carbon monoxide alarm', 5), ('Wifi', 5), ('Air conditioning', 6), ('Heating', 6), ('Hair dryer', 6), ('TV', 6), ('Breakfast', 6), ('Gym', 6), ('Smoke alarm', 6), ('Carbon monoxide alarm', 6), ('Wifi', 6), ('Wifi', 7), ('Kitchen', 7), ('Washer', 7), ('Dryer', 7​​), ('Heating', 7), ('Pool', 7), ('Smoke alarm', 7), ('Crib', 7), ('Hair dryer', 7), ('Dedicated workspace', 7), ('Iron', 7​​), ('Wifi', 8), ('Kitchen', 8), ('Washer', 8), ('Dryer', 8​​), ('Air conditioning', 8), ('Heating', 8), ('Dedicated workspace', 8), ('TV', 8), ('Hair dryer', 7), ('Pool', 8), ('Hot tub', 8), ('Free parking', 8), ('Gym', 8), ('BBQ grill', 8), ('Indoor fireplace', 8), ('Beachfront', 8), ('Smoke alarm', 8);
+LOCK TABLES Amentity WRITE;
+INSERT INTO Amentity VALUES ('Indoor fireplace', 1), ('BBQ grill', 1), ('Kitchen', 1), ('Heating', 1), ('Free parking', 1), ('Air conditioning', 2), ('Heating', 2), ('Hair dryer', 2), ('TV', 2), ('Smoke alarm', 2), ('Indoor fireplace', 3), ('BBQ grill', 3), ('Heating', 3), ('Air conditioning', 3), ('Hair dryer', 3), ('TV', 3), ('Free parking', 3), ('Smoke alarm', 3), ('Waterfront', 3), ('Heating', 4), ('Air conditioning', 4), ('Hair dryer', 4), ('TV', 4), ('Free parking', 4), ('Smoke alarm', 4), ('Wifi', 4), ('Free parking', 5), ('Air conditioning', 5), ('Heating', 5), ('Hair dryer', 5), ('TV', 5), ('Breakfast', 5), ('Gym', 5), ('Smoke alarm', 5), ('Carbon monoxide alarm', 5), ('Wifi', 5), ('Air conditioning', 6), ('Heating', 6), ('Hair dryer', 6), ('TV', 6), ('Breakfast', 6), ('Gym', 6), ('Smoke alarm', 6), ('Carbon monoxide alarm', 6), ('Wifi', 6), ('Wifi', 7), ('Kitchen', 7), ('Washer', 7), ('Heating', 7), ('Pool', 7), ('Smoke alarm', 7), ('Crib', 7), ('Hair dryer', 7), ('Dedicated workspace', 7), ('Iron', 7), ('Carbon monoxide alarm', 7), ('Wifi', 8), ('Kitchen', 8), ('Washer', 8), ('Dryer', 8), ('Air conditioning', 8), ('Heating', 8), ('Dedicated workspace', 8), ('TV', 8), ('Pool', 8), ('Hot tub', 8), ('Free parking', 8), ('Gym', 8), ('BBQ grill', 8), ('Indoor fireplace', 8), ('Beachfront', 8), ('Smoke alarm', 8);
 UNLOCK TABLES;
 
 LOCK TABLES Availabilities WRITE;
@@ -64,7 +64,7 @@ INSERT INTO Availabilities VALUES (1, '2023-09-01', 200), (1, '2023-09-02', 200)
 UNLOCK TABLES;
 
 LOCK TABLES Bookings WRITE;
-INSERT INTO Bookings VALUES (1, 1, '2023-08-25', '2023-08-30', false, null), (2, 1, '2023-09-15', '2023-09-18', false, null), (3, 2, '2023-10-22', '2023-10-25', true, 9), (4, 3, '2023-11-01', '2023-11-31', false, null), (5, 4, '2023-07-11', '2023-08-02', true, 2), (6, 5, '2023-05-21', '2023-05-26', false, null), (6, 3, '2023-04-22', '2023-12-29', false, null), (7, 6, '2024-01-01', '2024-01-06', false, null), (8, 7, '2022-12-01', '2022-12-31', false, null); 
+INSERT INTO Bookings VALUES (1, 1, '2023-08-25', '2023-08-30', false, null), (2, 1, '2023-09-15', '2023-09-18', false, null), (3, 2, '2023-10-22', '2023-10-25', true, 9), (4, 3, '2023-11-01', '2023-11-30', false, null), (5, 4, '2023-07-11', '2023-08-02', true, 2), (6, 5, '2023-05-21', '2023-05-26', false, null), (6, 3, '2023-04-22', '2023-12-29', false, null), (7, 6, '2024-01-01', '2024-01-06', false, null), (8, 7, '2022-12-01', '2022-12-31', false, null); 
 UNLOCK TABLES;
 
 LOCK TABLES RenterComments WRITE;
