@@ -72,12 +72,12 @@ public class Admin {
                 Class.forName(dbClassName);
                 Connection conn = DriverManager.getConnection(CONNECTION,  USER, PASS);
                 Statement stmt = conn.createStatement();
-                //Get the total number of bookings in a specific date range group by city
+                //Get the total number of bookings in a specific date range group by postal code
                 String sql = "SELECT COUNT(*) , Addresses.postal_code FROM Bookings inner join Listings on Bookings.lid = Listings.lid inner join Addresses on Listings.latitude = Addresses.latitude AND Listings.longitude = Addresses.longitude WHERE Bookings.start_date >= '" + start_date + "' AND Bookings.end_date <= '"+end_date+"' GROUP BY Addresses.postal_code;";
                 ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     System.out.println("-----------------------------");
-                    System.out.println("Postal code: "+rs.getString("Addresses.city"));
+                    System.out.println("Postal code: "+rs.getString("Addresses.postal_code"));
                     System.out.println("Total number of bookings: "+rs.getString("COUNT(*)"));
                     System.out.println("-----------------------------");
                 }
@@ -351,7 +351,7 @@ public class Admin {
             stmt.close();
             conn.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("No cancellations!");
         }
     }
 

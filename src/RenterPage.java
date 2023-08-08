@@ -247,6 +247,26 @@ public class RenterPage {
         Scanner input = new Scanner(System.in);
         System.out.println("Enter the listing id:");
         String listing_id = input.nextLine();
+        try {
+            Class.forName(dbClassName);
+            Connection conn = DriverManager.getConnection(CONNECTION, USER, PASS);
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT * FROM Listings WHERE lid = " + listing_id+ ";";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (!rs.next()) {
+                System.out.println("Invalid listing id!");
+                return;
+            } else {
+                int host_id = rs.getInt("uid");
+                if (host_id == renter_id) {
+                    System.out.println("You cannot book your own listing!");
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error!");
+            System.out.println(e.getMessage());
+        }
         System.out.println("Enter the start date in yyyy-mm-dd:");
         String start_date = input.nextLine();
         //check date format
@@ -334,6 +354,12 @@ public class RenterPage {
             //check date format
             if (end_date.length() != 10 || end_date.charAt(4) != '-' || end_date.charAt(7) != '-') {
                 System.out.println("Invalid date!");
+                return;
+            }
+            sql = "SELECT * FROM Bookings WHERE lid = " + lid + " AND uid = " + renter_id + " AND cancelled = '0' AND start_date = '" + start_date + "' AND end_date = '" + end_date + "';";
+            rs = stmt.executeQuery(sql);
+            if (!rs.next()) {
+                System.out.println("Booking not found!");
                 return;
             }
             sql = "UPDATE Bookings SET cancelled = '1' , cancelled_by = '" + renter_id + "' WHERE lid = " + lid + " AND uid = " + renter_id + " AND start_date = '" + start_date + "' AND end_date = '" + end_date + "';";
