@@ -2,6 +2,11 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
+
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetFactory;
+import javax.sql.rowset.RowSetProvider;
+
 import java.util.ArrayList;
 
 
@@ -52,9 +57,9 @@ public class RenterPage {
                 String rankedbyPrice = input.nextLine();
                 String sql = "";
                 if (rankedbyPrice.equals("1")) {
-                    sql = "SELECT * FROM Listings ORDER BY price ASC;";
+                    sql = "SELECT * FROM Listings right join (SELECT lid, AVG(price) AS avg_price FROM Availabilities GROUP BY lid ORDER BY AVG(price) ASC) AS T ON Listings.lid = T.lid GROUP BY T.lid;";
                 } else if (rankedbyPrice.equals("2")) {
-                    sql = "SELECT * FROM Listings ORDER BY price DESC;";
+                    sql = "SELECT * FROM Listings right join (SELECT lid, AVG(price) AS avg_price FROM Availabilities GROUP BY lid ORDER BY AVG(price) DESC) AS T ON Listings.lid = T.lid GROUP BY T.lid;";                    ;
                 } else if (rankedbyPrice.equals("3")) {
                     sql = "SELECT * FROM Listings;";
                 } else {
@@ -179,110 +184,128 @@ public class RenterPage {
                 String sql = "SELECT * FROM Listings;";
                 PreparedStatement pstmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
                 ResultSet rs = pstmt.executeQuery(sql);
+                RowSetFactory factory = RowSetProvider.newFactory();
+                CachedRowSet rowset = factory.createCachedRowSet();
+                rowset.populate(rs);
                 //copy the forward only result set to a scrollable result set
-                rs.beforeFirst();
                 if (latitude != "" && longitude != "" && distance != ""){
-                    while (rs.next()) {
-                        if (distance(Double.parseDouble(latitude), Double.parseDouble(longitude), Double.parseDouble(rs.getString("latitude")), Double.parseDouble(rs.getString("longitude"))) > Double.parseDouble(distance)){
-                            rs.deleteRow();
+                    rowset.beforeFirst();
+                    while (rowset.next()) {
+                        if (distance(Double.parseDouble(latitude), Double.parseDouble(longitude), Double.parseDouble(rowset.getString("latitude")), Double.parseDouble(rowset.getString("longitude"))) > Double.parseDouble(distance)){
+                            rowset.deleteRow();
                         }
                     }
                 }
                 if (lowest_price != "" && highest_price != ""){
-                    rs.beforeFirst();
-                    while (rs.next()) {
-                        if (Double.parseDouble(rs.getString("price")) < Double.parseDouble(lowest_price) || Double.parseDouble(rs.getString("price")) > Double.parseDouble(highest_price)){
-                            rs.deleteRow();
+                    rowset.beforeFirst();
+                    while (rowset.next()) {
+                        sql = "SELECT AVG(price) FROM Availabilities WHERE lid = " + rowset.getInt("lid") + ";";
+                        Statement stmt2 = conn.createStatement();
+                        ResultSet rs2 = stmt2.executeQuery(sql);
+                        rs2 = stmt2.executeQuery(sql);
+                        rs2.next();
+                        if (rs2.getDouble("AVG(price)") < Double.parseDouble(lowest_price) || rs2.getDouble("AVG(price)") > Double.parseDouble(highest_price)){
+                            rowset.deleteRow();
                         }
                     }
                 } else if (lowest_price != ""){
-                    rs.beforeFirst();
-                    while (rs.next()) {
-                        if (Double.parseDouble(rs.getString("price")) < Double.parseDouble(lowest_price)){
-                            rs.deleteRow();
+                    rowset.beforeFirst();
+                    while (rowset.next()) {
+                        sql = "SELECT AVG(price) FROM Availabilities WHERE lid = " + rowset.getInt("lid") + ";";
+                        Statement stmt2 = conn.createStatement();
+                        ResultSet rs2 = stmt2.executeQuery(sql);
+                        rs2 = stmt2.executeQuery(sql);
+                        rs2.next();
+                        if (rs2.getDouble("AVG(price)") < Double.parseDouble(lowest_price)){
+                            rowset.deleteRow();
                         }
                     }
                 } else if (highest_price != ""){
-                    rs.beforeFirst();
-                    while (rs.next()) {
-                        if (Double.parseDouble(rs.getString("price")) > Double.parseDouble(highest_price)){
-                            rs.deleteRow();
+                    rowset.beforeFirst();
+                    while (rowset.next()) {
+                        sql = "SELECT AVG(price) FROM Availabilities WHERE lid = " + rowset.getInt("lid") + ";";
+                        Statement stmt2 = conn.createStatement();
+                        ResultSet rs2 = stmt2.executeQuery(sql);
+                        rs2 = stmt2.executeQuery(sql);
+                        rs2.next();
+                        if (rs2.getDouble("AVG(price)") > Double.parseDouble(highest_price)){
+                            rowset.deleteRow();
                         }
                     }
                 }
                 if (amenities != null){
-                    rs.beforeFirst();
-                    while (rs.next()) {
+                    rowset.beforeFirst();
+                    while (rowset.next()) {
                         for (String amenity : amenities){
-                            sql = "SELECT * FROM Amentity WHERE lid = " + rs.getInt("lid") + " AND type = '" + amenity + "';";
+                            sql = "SELECT * FROM Amentity WHERE lid = " + rowset.getInt("lid") + " AND type = '" + amenity + "';";
                             ResultSet rs2 = stmt.executeQuery(sql);
                             if (!rs2.next()){
-                                rs.deleteRow();
+                                rowset.deleteRow();
                             }
                         }
                     }
                 }
                 if (StartDate != "" && EndDate != ""){
-                    rs.beforeFirst();
-                    while (rs.next()) {
-                        sql = "SELECT * FROM Availabilities WHERE lid = " + rs.getInt("lid") + " AND date >= '" + StartDate + "' AND date <= '" + EndDate + "';";
+                    rowset.beforeFirst();
+                    while (rowset.next()) {
+                        sql = "SELECT * FROM Availabilities WHERE lid = " + rowset.getInt("lid") + " AND date >= '" + StartDate + "' AND date <= '" + EndDate + "';";
                         ResultSet rs2 = stmt.executeQuery(sql);
                         if (!rs2.next()){
-                            rs.deleteRow();
+                            rowset.deleteRow();
                         }
                     }
                 } else if (StartDate != ""){
-                    rs.beforeFirst();
-                    while (rs.next()) {
-                        sql = "SELECT * FROM Availabilities WHERE lid = " + rs.getInt("lid") + " AND date >= '" + StartDate + "';";
+                    rowset.beforeFirst();
+                    while (rowset.next()) {
+                        sql = "SELECT * FROM Availabilities WHERE lid = " + rowset.getInt("lid") + " AND date >= '" + StartDate + "';";
                         ResultSet rs2 = stmt.executeQuery(sql);
                         if (!rs2.next()){
-                            rs.deleteRow();
+                            rowset.deleteRow();
                         }
                     }
                 } else if (EndDate != ""){
-                    rs.beforeFirst();
-                    while (rs.next()) {
-                        sql = "SELECT * FROM Availabilities WHERE lid = " + rs.getInt("lid") + " AND date <= '" + EndDate + "';";
+                    rowset.beforeFirst();
+                    while (rowset.next()) {
+                        sql = "SELECT * FROM Availabilities WHERE lid = " + rowset.getInt("lid") + " AND date <= '" + EndDate + "';";
                         ResultSet rs2 = stmt.executeQuery(sql);
                         if (!rs2.next()){
-                            rs.deleteRow();
+                            rowset.deleteRow();
                         }
                     }
                 }
                 //print the listings
                 System.out.println("Satisfied listings:");
-                rs.beforeFirst();
-                while (rs.next()) {
+                rowset.beforeFirst();
+                while (rowset.next()) {
                     System.out.println("------------------------------------");
-                    System.out.println("Listing ID: " + rs.getInt("lid"));
-                    System.out.println("Host ID: " + rs.getInt("uid"));
-                    sql = "SELECT AVG(rating) FROM HostComments WHERE uid1 = " + rs.getInt("uid") + ";";
+                    System.out.println("Listing ID: " + rowset.getInt("lid"));
+                    System.out.println("Host ID: " + rowset.getInt("uid"));
+                    sql = "SELECT AVG(rating) FROM HostComments WHERE uid1 = " + rowset.getInt("uid") + ";";
                     Statement stmt2 = conn.createStatement();
                     ResultSet rs2 = stmt2.executeQuery(sql);
                     rs2.next();
                     System.out.println("Host Rating: " + rs2.getString("AVG(rating)"));
-                    System.out.println("Latitude: " + rs.getString("latitude"));
-                    System.out.println("Longitude: " + rs.getString("longitude"));
-                    sql = "SELECT * FROM Addresses WHERE latitude = " + rs.getString("latitude") + " AND longitude = " + rs.getString("longitude") + ";";
+                    System.out.println("Latitude: " + rowset.getString("latitude"));
+                    System.out.println("Longitude: " + rowset.getString("longitude"));
+                    sql = "SELECT * FROM Addresses WHERE latitude = " + rowset.getString("latitude") + " AND longitude = " + rowset.getString("longitude") + ";";
                     rs2 = stmt2.executeQuery(sql);
                     rs2.next();
                     System.out.println("Address: " + rs2.getString("postal_code") + ", " + rs2.getString("city") + ", " + rs2.getString("country"));
-                    sql = "SELECT AVG(price) FROM Availabilities WHERE lid = " + rs.getInt("lid") + ";";
+                    sql = "SELECT AVG(price) FROM Availabilities WHERE lid = " + rowset.getInt("lid") + ";";
                     rs2 = stmt2.executeQuery(sql);
                     rs2.next();
                     System.out.println("Average price: " + rs2.getString("AVG(price)"));
-                    sql = "SELECT AVG(rating) FROM ListingComments WHERE lid = " + rs.getInt("lid") + ";";
+                    sql = "SELECT AVG(rating) FROM ListingComments WHERE lid = " + rowset.getInt("lid") + ";";
                     rs2 = stmt2.executeQuery(sql);
                     rs2.next();
                     System.out.println("Average rating: " + rs2.getString("AVG(rating)"));
-                    sql = "SELECT * FROM Amentity WHERE lid = " + rs.getInt("lid") + ";";
+                    sql = "SELECT * FROM Amentity WHERE lid = " + rowset.getInt("lid") + ";";
                     rs2 = stmt2.executeQuery(sql);
                     System.out.println("Amentity:");
                     while (rs2.next()) {
                         System.out.println(rs2.getString("type"));
                     }
-                    sql = "SELECT * FROM Availabilities WHERE lid = " + rs.getInt("lid") + ";";
+                    sql = "SELECT * FROM Availabilities WHERE lid = " + rowset.getInt("lid") + ";";
                     rs2 = stmt2.executeQuery(sql);
                     System.out.println("Availabilities:");
                     while (rs2.next()) {

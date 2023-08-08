@@ -381,12 +381,12 @@ public class Admin {
                 //Record the frequency of each word in a dictionary
                 Dictionary<String, Integer> dict = new Hashtable<String, Integer>();
                 while (rs2.next()) {
-                    String[] words = rs2.getString("content").split(" ");
+                    String[] words = rs2.getString("content").split("[, .?!\\s]+");
                     for (String word : words){
-                        if (dict.get(word) == null){
-                            dict.put(word, 1);
+                        if (dict.get(word.toLowerCase()) == null){
+                            dict.put(word.toLowerCase(), 1);
                         } else {
-                            dict.put(word, dict.get(word)+1);
+                            dict.put(word.toLowerCase(), dict.get(word.toLowerCase())+1);
                         }
                     }
                 }

@@ -44,7 +44,7 @@ LOCK TABLES Hosts WRITE;
 INSERT INTO Hosts VALUES (7, 1), (8, 1), (9, 2), (10, 3), (11, 1);
 UNLOCK TABLES;
 
- WRITE;
+ LOCK TABLES Listings WRITE;
 INSERT INTO Listings VALUES (1, 7, 'House', 40.73379665458717, -73.99854080178514, 200), 
 (2, 8, 'Apartment', 34.0899187402365, -118.36360049630225, 200), 
 (3, 9, 'House', 46.80510493748119, -71.24604289925429, 250), 
@@ -64,19 +64,17 @@ INSERT INTO Availabilities VALUES (1, '2023-09-01', 200), (1, '2023-09-02', 200)
 UNLOCK TABLES;
 
 LOCK TABLES Bookings WRITE;
-INSERT INTO Bookings VALUES (1, 1, '2023-08-25', '2023-08-30', false, null), (2, 1, '2023-09-15', '2023-09-18', false, null), (3, 2, '2023-10-22', '2023-10-25', true, 9), (4, 3, '2023-11-01', '2023-11-30', false, null), (5, 4, '2023-07-11', '2023-08-02', true, 2), (6, 5, '2023-05-21', '2023-05-26', false, null), (6, 3, '2023-04-22', '2023-12-29', false, null), (7, 6, '2024-01-01', '2024-01-06', false, null), (8, 7, '2022-12-01', '2022-12-31', false, null); 
+INSERT INTO Bookings VALUES (1, 1, '2023-08-25', '2023-08-30', false, null), (2, 1, '2023-09-15', '2023-09-18', false, null), (3, 2, '2023-10-22', '2023-10-25', true, 9), (4, 3, '2023-11-01', '2023-11-30', false, null), (5, 4, '2023-07-11', '2023-08-02', true, 4), (6, 5, '2023-05-21', '2023-05-26', false, null), (6, 3, '2023-04-22', '2023-05-22', false, null), (7, 6, '2024-01-01', '2024-01-06', false, null), (8, 7, '2022-12-01', '2022-12-31', false, null), (1, 1, '2022-09-20', '2022-09-25', false, null), (3, 2, '2023-04-08', '2023-04-26', false, null); 
 UNLOCK TABLES;
 
 LOCK TABLES RenterComments WRITE;
-INSERT INTO RenterComments VALUES (1, 7, 11, 'very nice guest', 5), (2, 5, 10, null, 4);
+INSERT INTO RenterComments VALUES (1, 7, 11, 'very nice guest', 5), (2, 5, 10, null, 4),(3, 1, 7, 'very organized renters, took all garbage out before check out', 5), (4, 2, 9, 'Trashed everywhere!!!', 1);
 UNLOCK TABLES;
 
 LOCK TABLES HostComments WRITE;
-INSERT INTO HostComments VALUES (1, 10, 5, 'terrible hotel management!', 2), (2, 11, 7, 'very luxurious house! Host is super nice and helpful! will definitely book again.', 5);
-
-
+INSERT INTO HostComments VALUES (1, 10, 5, 'terrible hotel management!', 2), (2, 11, 7, 'very luxurious house! Host is super nice and helpful! will definitely book again.', 5),  (3, 7, 1, 'Wonderful host and comfort place, he was very patient when answering questions.', 4), (4, 9, 2, 'We love sam and his house :)', 5);;
 UNLOCK TABLES;
 
 LOCK TABLES ListingComments WRITE;
-INSERT INTO listingComments VALUES (1, 5, 6, 'The facilities are good, rooms are clean.', 3), (2, 7, 8, 'very luxurious house! Love the beach view, hot tub and private pool in backyard.', 5);
+INSERT INTO listingComments VALUES (1, 5, 6, 'The facilities are good, rooms are clean.', 3), (2, 7, 8, 'very luxurious house! Love the beach view, hot tub and private pool in backyard.', 5), (3, 3, 6, 'Good house, clean room!', 4), (4, 1, 1, 'Indoor fireplace very cozy, room is small but clean', 3), (5, 2, 3, 'Waterfront view is terrific. Love the unique indoor fireplace decoration.', 4);
 UNLOCK TABLES;
